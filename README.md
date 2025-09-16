@@ -116,11 +116,23 @@ kctouch add -s /my/secret --cache-n 5
 # Remove secret and invalidate authentication cache for duration
 kctouch rm -s /my/secret --cache-for 0
 
-# Get secret and invalidate authentication cache for number of operations
-kctouch get -s /my/secret --cache-n 0
+# Invalidate authentication cache for number of operations
+kctouch noop --cache-n 0
 ```
 
 If you set both `--cache-for` and `--cache-n`, the attempts will begin to decrease from `--cache-n` after `--cache-for` expires.
+
+### No-Op Command
+
+The `noop` command is useful for authentication caching without performing any actual keychain operations:
+
+```bash
+# Authenticate and cache for future operations
+kctouch noop --cache-for 5m
+
+# Just do nothing except auth
+kctouch noop
+```
 
 ### Command Aliases
 
