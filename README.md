@@ -24,6 +24,18 @@ It works with generic-password items only.
 
 ## Installation
 
+### Homebrew
+
+```sh
+brew install rgeraskin/homebrew/kctouch
+```
+
+### Using Go Install
+
+```bash
+go install github.com/rgeraskin/kctouch@latest
+```
+
 ### From Source
 
 ```bash
@@ -31,12 +43,6 @@ git clone https://github.com/rgeraskin/kctouch.git
 cd kctouch
 go build -o kctouch
 sudo mv kctouch /usr/local/bin/
-```
-
-### Using Go Install
-
-```bash
-go install github.com/rgeraskin/kctouch@latest
 ```
 
 ## Usage
