@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - goos:
+      - darwin
+    goarch:
+      - arm64
+      - amd64
+    env:
+      - CGO_ENABLED=1
+    overrides:
+      - goos: darwin
+        goarch: amd64
+        env:
+          - CGO_ENABLED=1
+          - CGO_CFLAGS=-target x86_64-apple-macos10.12
+          - CGO_LDFLAGS=-target x86_64-apple-macos10.12
+archives:
+  - format: tar.gz
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_ {{- title .Os }}_ {{- if eq .Arch "amd64" }}x86_64 {{- else if eq .Arch "386" }}i386 {{- else }}{{ .Arch }}{{ end }} {{- if .Arm }}v{{ .Arm }}{{ end }}
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^ci:"
+brews:
+  - name: kctouch
+    homepage: https://github.com/rgeraskin/kctouch
+    description: A cli tool for managing macOS Keychain items with TouchID authentication
+    license: MIT
+
+    directory: Formula
+    repository:
+      owner: rgeraskin
+      name: homebrew-homebrew
