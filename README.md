@@ -6,7 +6,9 @@ A command-line tool for managing macOS Keychain items with TouchID authenticatio
 
 **kctouch** is a Go-based CLI tool that provides a simple and secure way to store, retrieve, and manage passwords in the macOS Keychain. All operations require TouchID authentication, ensuring that your credentials remain protected even if someone gains access to your terminal.
 
-It works with generic-password items only.
+It can be used standalone or as a Touch ID interface for your favorite password manager CLI tool: store the master password for your database in the keychain and use kctouch to retrieve it to unlock your secrets. For example, at the time of writing, KeePassXC does not support Touch ID for its CLI. And as far as I know, there is no KeePass CLI backend that supports Touch ID authentication.
+
+Kctouch works with generic-password keychain items only.
 
 ## Features
 
@@ -16,6 +18,8 @@ It works with generic-password items only.
 - 🛡️ **Secure by Default** - No plaintext password storage in command history
 - ⚡ **Fast & Lightweight** - Single binary with minimal dependencies
 - 🎯 **Simple Interface** - Intuitive commands with helpful aliases
+
+You probably know that the macOS `security` command-line tool can manage Keychain items. But granting it access to your secrets means any application with terminal access can potentially retrieve those secrets using the `security` command without prompting for authentication. Kctouch addresses this by adding an intermediate layer of authentication with Touch ID, enhancing security.
 
 ## Requirements
 
