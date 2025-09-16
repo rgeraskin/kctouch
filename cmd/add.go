@@ -56,6 +56,7 @@ func add(cmd *cobra.Command, args []string) error {
 	account := cmd.Flag("account").Value.String()
 	label := cmd.Flag("label").Value.String()
 	passwordFlag := cmd.Flag("password").Value.String()
+	updateFlag, _ := cmd.Flags().GetBool("update")
 
 	if service == "" {
 		return fmt.Errorf("required flag(s) \"service\" not set")
@@ -67,7 +68,7 @@ func add(cmd *cobra.Command, args []string) error {
 	}
 
 	item := createKeychainItem(service, account, label, password)
-	return addKeychainItem(item, service, label, account)
+	return addKeychainItem(item, service, label, account, updateFlag)
 }
 
 func getPassword(passwordFlag string) (string, error) {
@@ -120,24 +121,31 @@ func createKeychainItem(service, account, label, password string) keychain.Item 
 	return item
 }
 
-func addKeychainItem(item keychain.Item, service, label, account string) error {
+func addKeychainItem(item keychain.Item, service, label, account string, update bool) error {
 	forMsg := composeForMsg(service, account, label)
+	action := "added"
 
 	err := keychain.AddItem(item)
 
 	if err == keychain.ErrorDuplicateItem {
-		return fmt.Errorf(
-			"keychain item already exists for %s",
-			forMsg,
-		)
+		if update {
+			err = keychain.UpdateItem(item, item)
+			action = "updated"
+		} else {
+			return fmt.Errorf(
+				"keychain item already exists for %s, use --update to update it",
+				forMsg,
+			)
+		}
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to add keychain item: %w", err)
+		return fmt.Errorf("failed to add/update keychain item: %w", err)
 	}
 
 	fmt.Printf(
-		"Successfully added keychain entry for: %s\n",
+		"Successfully %s keychain entry for: %s\n",
+		action,
 		forMsg,
 	)
 	return nil
@@ -148,4 +156,5 @@ func init() {
 
 	addCmd.Flags().
 		StringP("password", "p", "", "Password (if omitted: will be prompted (safest way), use '-' for stdin)")
+	addCmd.Flags().BoolP("update", "u", false, "Update existing keychain item if it exists already")
 }

@@ -72,6 +72,15 @@ kctouch add -s "MyService" -p "mypassword"
 kctouch add -s "ghpat" -a "myuser" -l "GitHub Personal Access Token"
 ```
 
+#### Updating existing passwords:
+```bash
+# Update an existing password entry
+kctouch add -s "MyService" -u
+
+# Update with new password directly
+kctouch add -s "MyService" -p "newpassword" --update
+```
+
 ### Retrieving Passwords
 
 ```bash
