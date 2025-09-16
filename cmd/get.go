@@ -39,9 +39,9 @@ var getCmd = &cobra.Command{
   kctouch find -s "this/is/a/service"`,
 	Args:         cobra.NoArgs,
 	SilenceUsage: true,
-	PreRunE: func(_ *cobra.Command, _ []string) error {
+	PreRunE: func(cmd *cobra.Command, _ []string) error {
 		// Authenticate before allowing access
-		return auth("get keychain entry")
+		return auth(cmd, "get keychain entry")
 	},
 	RunE: get,
 }

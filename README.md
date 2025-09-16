@@ -45,6 +45,9 @@ All commands support the following flags:
 - `-s, --service` - Service name (required for add/rm operations)
 - `-a, --account` - Account name (optional)
 - `-l, --label` - Label for the keychain item (optional, defaults to service name)
+- `-v, --verbose` - Enable verbose logging
+- `--cache-for` - Cache authentication for specified time duration (e.g. 1h, 10m, 10s)
+- `--cache-n` - Cache authentication for N subsequent operations
 
 ### Adding Passwords
 
@@ -99,6 +102,26 @@ kctouch rm -s "GitHub"
 kctouch rm -s "GitHub" -a "myusername"
 ```
 
+### Authentication Caching
+
+To reduce the number of TouchID prompts during multiple operations, you can cache authentication:
+
+```bash
+# Get secret and cache authentication for 10 minutes
+kctouch get -s /my/secret --cache-for 10m
+
+# Add secret and cache authentication for 5 operations
+kctouch add -s /my/secret --cache-n 5
+
+# Remove secret and invalidate authentication cache for duration
+kctouch rm -s /my/secret --cache-for 0
+
+# Get secret and invalidate authentication cache for number of operations
+kctouch get -s /my/secret --cache-n 0
+```
+
+If you set both `--cache-for` and `--cache-n`, the attempts will begin to decrease from `--cache-n` after `--cache-for` expires.
+
 ### Command Aliases
 
 For faster typing, kctouch supports several aliases:
@@ -112,6 +135,17 @@ Examples:
 kctouch a -s "service" -p "password"
 kctouch g -s "service"
 kctouch d -s "service"
+```
+
+### Debugging and Verbose Output
+
+Use the verbose flag to see detailed logging information:
+
+```bash
+# Enable verbose logging for any command
+kctouch add -s "service" -v
+kctouch get -s "service" --verbose
+kctouch noop --cache-for 5m -v
 ```
 
 ## Dependencies

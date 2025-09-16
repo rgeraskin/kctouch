@@ -44,9 +44,9 @@ var addCmd = &cobra.Command{
   echo "mypassword" | kctouch add -s "this/is/a/service" -p -`,
 	Args:         cobra.NoArgs,
 	SilenceUsage: true,
-	PreRunE: func(_ *cobra.Command, _ []string) error {
+	PreRunE: func(cmd *cobra.Command, _ []string) error {
 		// Authenticate before allowing access
-		return auth("add new keychain entry")
+		return auth(cmd, "add new keychain entry")
 	},
 	RunE: add,
 }
@@ -121,9 +121,9 @@ func createKeychainItem(service, account, label, password string) keychain.Item 
 }
 
 func addKeychainItem(item keychain.Item, service, label, account string) error {
-	err := keychain.AddItem(item)
-
 	forMsg := composeForMsg(service, account, label)
+
+	err := keychain.AddItem(item)
 
 	if err == keychain.ErrorDuplicateItem {
 		return fmt.Errorf(

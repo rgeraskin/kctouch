@@ -38,9 +38,9 @@ var rmCmd = &cobra.Command{
   kctouch rm -s "GitHub" -a "myusername"`,
 	Args:         cobra.NoArgs,
 	SilenceUsage: true,
-	PreRunE: func(_ *cobra.Command, _ []string) error {
+	PreRunE: func(cmd *cobra.Command, _ []string) error {
 		// Authenticate before allowing access
-		return auth("remove keychain entry")
+		return auth(cmd, "remove keychain entry")
 	},
 	RunE: rm,
 }
